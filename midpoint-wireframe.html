@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midpoint Finder - Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .view-toggle button {
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .view-toggle button.active {
+            background: #333;
+            color: white;
+        }
+
+        .screens-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .phone-frame {
+            width: 375px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 15px;
+            border: 8px solid #333;
+        }
+
+        .desktop-frame {
+            width: 100%;
+            max-width: 1024px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 20px;
+            border: 2px solid #ccc;
+        }
+
+        .screen {
+            background: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-label {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Main content */
+        .content {
+            padding: 30px 20px;
+            flex: 1;
+        }
+
+        /* Input screen */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            background: #f9f9f9;
+            font-size: 16px;
+            color: #999;
+        }
+
+        .swap-icon {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 20px;
+            color: #666;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 18px;
+            background: #333;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .primary-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Results screen */
+        .map-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #e8e8e8;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .result-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .stat-box {
+            display: inline-block;
+            background: white;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .secondary-button {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #333;
+            border: 2px solid #333;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* Desktop specific */
+        .desktop-layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        .desktop-sidebar {
+            width: 350px;
+            flex-shrink: 0;
+        }
+
+        .desktop-map {
+            flex: 1;
+            height: 600px;
+            background: #e8e8e8;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        /* Loading state */
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #333;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Midpoint Finder App - Wireframe</h1>
+        
+        <div class="view-toggle">
+            <button class="active" onclick="showView('mobile')">Mobile View</button>
+            <button onclick="showView('desktop')">Desktop View</button>
+        </div>
+
+        <!-- MOBILE VIEW -->
+        <div id="mobile-view" class="screens-wrapper">
+            <!-- Screen 1: Input -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 1: Location Input</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                        <div class="tagline">Find the perfect meeting spot</div>
+                    </div>
+                    <div class="content">
+                        <div class="input-group">
+                            <label class="label">Location A</label>
+                            <div class="input-box">Enter first location...</div>
+                        </div>
+                        
+                        <div class="swap-icon">⇅</div>
+                        
+                        <div class="input-group">
+                            <label class="label">Location B</label>
+                            <div class="input-box">Enter second location...</div>
+                        </div>
+
+                        <button class="primary-button" disabled>Find Midpoint</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: Loading -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 2: Loading State</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                    </div>
+                    <div class="content">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <div class="loading-text">Finding your midpoint...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 3: Results -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 3: Results</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                    </div>
+                    <div class="content">
+                        <div class="map-placeholder">
+                            [MAP VIEW]<br>
+                            Midpoint + 10min walk radius
+                        </div>
+
+                        <div class="result-section">
+                            <div class="result-title">📍 Midpoint Location</div>
+                            <div class="result-text">123 Main Street, City Center</div>
+                        </div>
+
+                        <div class="result-section">
+                            <div class="result-title">📊 Meeting Area Details</div>
+                            <div class="stat-box">
+                                <div class="stat-label">Radius</div>
+                                <div class="stat-value">10 min</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Distance</div>
+                                <div class="stat-value">~800m</div>
+                            </div>
+                        </div>
+
+                        <button class="secondary-button">← New Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESKTOP VIEW -->
+        <div id="desktop-view" class="screens-wrapper hide">
+            <!-- Desktop Input Screen -->
+            <div class="desktop-frame">
+                <div class="screen-label">Desktop: Input View</div>
+                <div class="header">
+                    <div class="app-title">MeetMidway</div>
+                    <div class="tagline">Find the perfect meeting spot between two locations</div>
+                </div>
+                <div class="content">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <div class="input-group">
+                            <label class="label">Location A</label>
+                            <div class="input-box">Enter first location...</div>
+                        </div>
+                        
+                        <div class="swap-icon">⇅</div>
+                        
+                        <div class="input-group">
+                            <label class="label">Location B</label>
+                            <div class="input-box">Enter second location...</div>
+                        </div>
+
+                        <button class="primary-button" disabled>Find Midpoint</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Results Screen -->
+            <div class="desktop-frame" style="margin-top: 30px;">
+                <div class="screen-label">Desktop: Results View</div>
+                <div class="header">
+                    <div class="app-title">MeetMidway</div>
+                </div>
+                <div class="content">
+                    <div class="desktop-layout">
+                        <div class="desktop-sidebar">
+                            <div class="input-group">
+                                <label class="label">Location A</label>
+                                <div class="input-box" style="padding: 12px; font-size: 14px; color: #333;">789 North Ave</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="label">Location B</label>
+                                <div class="input-box" style="padding: 12px; font-size: 14px; color: #333;">456 South St</div>
+                            </div>
+
+                            <div class="result-section">
+                                <div class="result-title">📍 Midpoint</div>
+                                <div class="result-text">123 Main Street, City Center</div>
+                            </div>
+
+                            <div class="result-section">
+                                <div class="result-title">📊 Details</div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Walk Time</div>
+                                    <div class="stat-value">10 min</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Radius</div>
+                                    <div class="stat-value">~800m</div>
+                                </div>
+                            </div>
+
+                            <button class="secondary-button">New Search</button>
+                        </div>
+
+                        <div class="desktop-map">
+                            [LARGE MAP VIEW]<br>
+                            Showing midpoint + 10min walking radius
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(view) {
+            const mobileView = document.getElementById('mobile-view');
+            const desktopView = document.getElementById('desktop-view');
+            const buttons = document.querySelectorAll('.view-toggle button');
+
+            if (view === 'mobile') {
+                mobileView.classList.remove('hide');
+                desktopView.classList.add('hide');
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                mobileView.classList.add('hide');
+                desktopView.classList.remove('hide');
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
