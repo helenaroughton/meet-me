@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midpoint Finder - Cherry Pop V2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #FFF9F2;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #551a25;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .view-toggle button {
+            padding: 12px 30px;
+            border: none;
+            background: #C1D7EF;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            color: #551a25;
+            font-weight: 500;
+            border-radius: 25px;
+        }
+
+        .view-toggle button.active {
+            background: #f25c54;
+            color: white;
+        }
+
+        .screens-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .phone-frame {
+            width: 375px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(85, 26, 37, 0.15);
+            padding: 20px;
+            border: 1px solid #C1D7EF;
+        }
+
+        .desktop-frame {
+            width: 100%;
+            max-width: 1024px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(85, 26, 37, 0.15);
+            padding: 30px;
+            border: 1px solid #C1D7EF;
+        }
+
+        .screen {
+            background: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-label {
+            text-align: center;
+            font-size: 11px;
+            color: #551a25;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Header */
+        .header {
+            padding: 30px 20px;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid #C1D7EF;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #551a25;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: #f25c54;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        /* Main content */
+        .content {
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        /* Input screen */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #551a25;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #C1D7EF;
+            background: white;
+            font-size: 15px;
+            color: #551a25;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #f25c54;
+        }
+
+        .swap-icon {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 24px;
+            color: #FFE3b3;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 20px;
+            background: #f25c54;
+            color: white;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .primary-button:hover {
+            background: #e04a42;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(242, 92, 84, 0.3);
+        }
+
+        .primary-button:disabled {
+            background: #C1D7EF;
+            cursor: not-allowed;
+            color: #551a25;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        /* Results screen */
+        .map-placeholder {
+            width: 100%;
+            height: 320px;
+            background: #C1D7EF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #551a25;
+            font-size: 13px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            border-radius: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .result-section {
+            background: white;
+            padding: 25px;
+            border: 1px solid #C1D7EF;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f25c54;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-text {
+            font-size: 15px;
+            color: #551a25;
+            line-height: 1.6;
+        }
+
+        .stat-box {
+            display: inline-block;
+            background: #FFF9F2;
+            padding: 15px 20px;
+            border: 1px solid #FFE3b3;
+            margin-right: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #551a25;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f25c54;
+            margin-top: 5px;
+        }
+
+        .secondary-button {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: #551a25;
+            border: 2px solid #C1D7EF;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .secondary-button:hover {
+            background: #C1D7EF;
+            border-color: #C1D7EF;
+        }
+
+        /* Desktop specific */
+        .desktop-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .desktop-sidebar {
+            width: 380px;
+            flex-shrink: 0;
+        }
+
+        .desktop-map {
+            flex: 1;
+            height: 600px;
+            background: #C1D7EF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #551a25;
+            font-weight: 500;
+            border-radius: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        /* Loading state */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #C1D7EF;
+            border-top: 5px solid #f25c54;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #551a25;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MIDPOINT FINDER - CHERRY POP V2</h1>
+        
+        <div class="view-toggle">
+            <button class="active" onclick="showView('mobile')">Mobile View</button>
+            <button onclick="showView('desktop')">Desktop View</button>
+        </div>
+
+        <!-- MOBILE VIEW -->
+        <div id="mobile-view" class="screens-wrapper">
+            <!-- Screen 1: Input -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 1: Location Input</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                        <div class="tagline">Find your perfect meeting spot</div>
+                    </div>
+                    <div class="content">
+                        <div class="input-group">
+                            <label class="label">Location A</label>
+                            <div class="input-box">Enter first location...</div>
+                        </div>
+                        
+                        <div class="swap-icon">⇅</div>
+                        
+                        <div class="input-group">
+                            <label class="label">Location B</label>
+                            <div class="input-box">Enter second location...</div>
+                        </div>
+
+                        <button class="primary-button" disabled>Find Midpoint</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: Loading -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 2: Loading State</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                    </div>
+                    <div class="content">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <div class="loading-text">Finding your midpoint...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 3: Results -->
+            <div class="phone-frame">
+                <div class="screen-label">Screen 3: Results</div>
+                <div class="screen">
+                    <div class="header">
+                        <div class="app-title">MeetMidway</div>
+                    </div>
+                    <div class="content">
+                        <div class="map-placeholder">
+                            MAP VIEW<br>
+                            Midpoint + 10min walk radius
+                        </div>
+
+                        <div class="result-section">
+                            <div class="result-title">📍 Midpoint Location</div>
+                            <div class="result-text">123 Main Street, City Center</div>
+                        </div>
+
+                        <div class="result-section">
+                            <div class="result-title">📊 Meeting Area Details</div>
+                            <div class="stat-box">
+                                <div class="stat-label">Radius</div>
+                                <div class="stat-value">10 min</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Distance</div>
+                                <div class="stat-value">~800m</div>
+                            </div>
+                        </div>
+
+                        <button class="secondary-button">← New Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESKTOP VIEW -->
+        <div id="desktop-view" class="screens-wrapper hide">
+            <!-- Desktop Input Screen -->
+            <div class="desktop-frame">
+                <div class="screen-label">Desktop: Input View</div>
+                <div class="header">
+                    <div class="app-title">MeetMidway</div>
+                    <div class="tagline">Find the perfect meeting spot between two locations</div>
+                </div>
+                <div class="content">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <div class="input-group">
+                            <label class="label">Location A</label>
+                            <div class="input-box">Enter first location...</div>
+                        </div>
+                        
+                        <div class="swap-icon">⇅</div>
+                        
+                        <div class="input-group">
+                            <label class="label">Location B</label>
+                            <div class="input-box">Enter second location...</div>
+                        </div>
+
+                        <button class="primary-button" disabled>Find Midpoint</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Results Screen -->
+            <div class="desktop-frame" style="margin-top: 30px;">
+                <div class="screen-label">Desktop: Results View</div>
+                <div class="header">
+                    <div class="app-title">MeetMidway</div>
+                </div>
+                <div class="content">
+                    <div class="desktop-layout">
+                        <div class="desktop-sidebar">
+                            <div class="input-group">
+                                <label class="label">Location A</label>
+                                <div class="input-box" style="padding: 15px 20px; font-size: 14px; color: #551a25;">789 North Ave</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="label">Location B</label>
+                                <div class="input-box" style="padding: 15px 20px; font-size: 14px; color: #551a25;">456 South St</div>
+                            </div>
+
+                            <div class="result-section">
+                                <div class="result-title">📍 Midpoint</div>
+                                <div class="result-text">123 Main Street, City Center</div>
+                            </div>
+
+                            <div class="result-section">
+                                <div class="result-title">📊 Details</div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Walk Time</div>
+                                    <div class="stat-value">10 min</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Radius</div>
+                                    <div class="stat-value">~800m</div>
+                                </div>
+                            </div>
+
+                            <button class="secondary-button">New Search</button>
+                        </div>
+
+                        <div class="desktop-map">
+                            LARGE MAP VIEW<br>
+                            Showing midpoint + 10min walking radius
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(view) {
+            const mobileView = document.getElementById('mobile-view');
+            const desktopView = document.getElementById('desktop-view');
+            const buttons = document.querySelectorAll('.view-toggle button');
+
+            if (view === 'mobile') {
+                mobileView.classList.remove('hide');
+                desktopView.classList.add('hide');
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                mobileView.classList.add('hide');
+                desktopView.classList.remove('hide');
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

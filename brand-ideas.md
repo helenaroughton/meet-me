@@ -10,20 +10,20 @@ Bowlby One + Libre Franklin
 
 ## Colour Palettes
 
-Decadent - #551a25
-Cherry Pop - #f25c54
-Ice Blue - #C1D7EF
-Creamsicle - #FFE3b3
-Clouds - #FFF9F2
+Decadent - #551a25 10%
+Cherry Pop - #f25c54 20%
+Ice Blue - #C1D7EF 40%
+Creamsicle - #FFE3b3 20% 
+Clouds - #FFF9F2 10%
 
 playful, nostaligc, fun
 
-Cabernet - #551a25
-Lip Tint - #Db5461
-Blush Drop - #fad3c2
-Frosted - #fff8e0
-Porcelain Mist - #efeae2
-Dusky - #9fb8d4
+Cabernet - #551a25 10%
+Lip Tint - #Db5461 20%
+Blush Drop - #fad3c2 35%
+Frosted - #fff8e0 10%
+Porcelain Mist - #efeae2 10%
+Dusky - #9fb8d4 15%
 
 charming, flirty, romantic
 
