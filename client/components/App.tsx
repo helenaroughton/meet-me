@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getGreeting } from '../apiClient.ts'
 import { useQuery } from '@tanstack/react-query'
+import MeetMe from './MeetMe.tsx'
 
 const App = () => {
   const [count, setCount] = useState(0)
@@ -23,6 +24,7 @@ const App = () => {
         </p>
       )}
       <button onClick={() => setCount(count + 1)}>Click</button>
+      <MeetMe />
     </>
   )
 }
